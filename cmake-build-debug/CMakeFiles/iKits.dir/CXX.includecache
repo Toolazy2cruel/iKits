@@ -26,6 +26,10 @@ map
 DListNode.h
 /Users/chenzhi/CLionProjects/iKits/DListNode.h
 
+/Users/chenzhi/CLionProjects/iKits/algorithm.h
+iostream
+-
+
 /Users/chenzhi/CLionProjects/iKits/main.cpp
 iostream
 -
@@ -51,8 +55,12 @@ LFUCache.h
 /Users/chenzhi/CLionProjects/iKits/LFUCache.h
 LFUCache.cpp
 /Users/chenzhi/CLionProjects/iKits/LFUCache.cpp
+stack
+-
 threadpool.h
 /Users/chenzhi/CLionProjects/iKits/threadpool.h
+algorithm.h
+/Users/chenzhi/CLionProjects/iKits/algorithm.h
 
 /Users/chenzhi/CLionProjects/iKits/test_template.h
 

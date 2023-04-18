@@ -10,7 +10,9 @@
 #include "LRUCache.h"
 #include "LFUCache.h"
 #include "LFUCache.cpp"
+#include <stack>
 #include "threadpool.h"
+#include "algorithm.h"
 
 using namespace std;
 
@@ -339,6 +341,61 @@ struct TestObj{
     int b;
 };
 
+
+
+//单调栈
+vector<int> getRightMax(vector<int>& nums) {
+    vector<int> res;
+    if (nums.empty()) {
+        return res;
+    }
+   stack<int> monotonous;
+    res.assign(nums.size(), -1);
+    int end = nums.size() - 1;
+    monotonous.push(nums[end]);
+    for (int i = end; i >= 0; i--) {
+        while (!monotonous.empty()) {
+            if (monotonous.top() > nums[i]) {
+                res[i] = monotonous.top();
+                break;
+            }
+            monotonous.pop();
+        }
+        if (monotonous.empty()) {
+            res[i] = -1;
+        }
+        monotonous.push(nums[i]);
+    }
+    return res;
+}
+
+//单调栈
+vector<int> getRightMaxV2(vector<int>& nums) {
+    vector<int> res;
+    if (nums.empty()) {
+        return res;
+    }
+    stack<int> monotonous;
+    res.assign(nums.size(), -1);
+    int end = nums.size() - 1;
+    monotonous.push(end);
+    for (int i = end; i >= 0; i--) {
+        while (!monotonous.empty()) {
+            int index = monotonous.top();
+            if (nums[index] > nums[i]) {
+                res[i] = index - i;
+                break;
+            }
+            monotonous.pop();
+        }
+        if (monotonous.empty()) {
+            res[i] = -1;
+        }
+        monotonous.push(i);
+    }
+    return res;
+}
+
 int sumClac(vector<int>& nums) {
     if (nums.empty()) {
         return 0;
@@ -364,6 +421,80 @@ int sumClac(vector<int>& nums) {
     return res;
 }
 
+class Solution {
+public:
+    bool isPalindrome(string s) {
+        int left = 0;
+        int right = s.size() - 1;
+        while (left <= right ) {
+            if (s[left] != s[right]) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
+    }
+    string res = "";
+    string isPalindrome(string& s, int left, int right) {
+        while (left >= 0 && right < s.size() && s[left] == s[right]) {
+            left--;
+            right++;
+        }
+        return s.substr(left+1, right-1-left-1+1);
+    }
+
+    int getPalindrome(string& s, int left, int right) {
+        int num = 0;
+        while (left >= 0 && right < s.size() && s[left] == s[right]) {
+            num++;
+            left--;
+            right++;
+        }
+        return num;
+    }
+
+    int  countSubstrings(string s) {
+        int num = 0;
+        for (int i = 0; i < s.size(); ++i) {
+            num += getPalindrome(s, i, i) + getPalindrome(s, i, i+1);
+        }
+        return num;
+
+    }
+};
+
+class SolutionV2 {
+public:
+    int partion(vector<int>& nums, int left, int right) {
+        int cur = nums[left];
+        while (left < right) {
+            while(left < right && nums[right] >= cur) {
+                right--;
+            }
+            nums[left] = nums[right];
+            while(left < right && nums[left] < cur) {
+                left++;
+            }
+            nums[right] = nums[left];
+        }
+        nums[left] = cur;
+        return left;
+    }
+
+    void quickSort(vector<int>& nums, int left, int right) {
+        if (left < right) {
+            int mid = partion(nums, left, right);
+            quickSort(nums, left, mid);
+            quickSort(nums, mid + 1, right);
+        }
+    }
+
+    int findUnsortedSubarray(vector<int>& nums) {
+        return 0;
+    }
+};
+
 void testLRU() {
     LRUCache cache(2);
     cache.Put(2,3);
@@ -388,8 +519,199 @@ void testLFU() {
     cout << cache.get(5) << endl;
 }
 
+string decodeString(string& s) {
+    stack<char> record;
+    string res = "";
+    for (int i = 0; i < s.size(); ++i) {
+        if (s[i] == ']') {
+            string inner = "";
+            while (record.top() != '[') {
+                inner = record.top() + inner;
+                record.pop();
+            }
+            record.pop(); //弹出符号
+            int seq = 0, base = 1;
+            while (!record.empty() && record.top() >= '0' && record.top() <= '9') {
+                int next = record.top() - '0';
+                seq += next * base;
+                base *= 10;
+                record.pop(); //可能有多个数字
+            }
+            for (int j = 0; j < seq; ++j) {
+                for (char k : inner) {
+                    record.push(k);
+                }
+            }
+            continue;
+        }
+        record.push(s[i]);
+    }
+    while (!record.empty()) {
+        res = record.top() + res;
+        record.pop();
+    }
+
+    return res;
+
+}
+
+vector<double> calcEquation(vector<vector<string>>& equations, vector<double>& values, vector<vector<string>>& queries) {
+    std::map<string, map<string, double >> memo;
+    for (int i = 0; i < equations.size(); ++i) {
+        string pre = equations[i][0];
+        string  back = equations[i][1];
+        memo[pre][back] = values[i];
+        memo[back][pre] = 1 / values[i];
+    }
+    vector<double> res;
+    for (auto & querie : queries) {
+        string pre = querie[0];
+        string  back = querie[1];
+        if (pre == back) {
+            res.push_back(1);
+            continue;
+        }
+        auto record = memo.find(pre);
+        if (record == memo.end()) {
+            res.push_back(-1);
+            continue;
+        }
+        auto detail = record->second.find(back);
+        if (detail != record->second.end()) {
+            res.push_back(detail->second);
+            continue;
+        } else {
+            //上一层去找
+            auto front = memo.find(back);
+            if (front != memo.end()) {
+                if (front->second.find(pre) != front->second.end()) {
+                    res.push_back(detail->second/front->second[pre]);
+                }
+            } else {
+                res.push_back(-1);
+            }
+        }
+
+    }
+    return res;
+}
+
+int leastInterval(vector<char>& tasks, int n) {
+    if (n == 0) {
+        return tasks.size();
+    }
+    //尽可能不重复任务先执行
+    std::map<char, int> momo;
+    for (int i = 0; i < tasks.size(); ++i) {
+        momo[tasks[i]]++;
+    }
+    int max_task = 0, n_cols = 0;
+    for (auto& val : momo) {
+        if (val.second > max_task) {
+            max_task = val.second;
+        }
+    }
+    for (auto& val : momo) {
+        if (val.second == max_task)
+            n_cols++;
+    }
+    int task_num = tasks.size();
+    return max(task_num, (max_task - 1) * (n + 1) + n_cols);
+}
+
+void reconstructQueue() {
+    vector<vector<int>> people = {{7,0}, {4,4}, {7,1}, {5,0}, {6,1}, {5,2}};
+    auto cmp = [](vector<int>& a, vector<int>& b) -> bool{
+        return a[0] > b[0] || (a[0] == b[0] && a[1] < b[1] );
+    };
+    sort(people.begin(), people.end(), cmp);
+    cout << printVec(people) << endl;
+    vector<vector<int>> res;
+    map<pair<int,int>, int> memo;
+    memo[std::make_pair(2,3)] = 3;
+    memo[std::make_pair(3,3)] = 3;
+
+}
+
+namespace maxSquare{
+    bool dfs(vector<vector<char>>& in, int i, int j, int& res) {
+        if (i < 0 || i >= in.size() || j < 0 || j >= in[0].size() || in[i][j] == '0') {
+            return false;
+        }
+        res += 1;
+        bool is_meet = dfs(in, i + 1, j, res) && dfs(in, i, j + 1, res) && dfs(in, i + 1, j + 1, res);
+        cout << "is_meet=" <<is_meet <<endl;
+        if (is_meet) {
+            return true;
+        }
+        return true;
+    }
+
+    int maxSquare(vector<vector<char>>& matrix) {
+        int m = matrix.size();
+        if (m == 0) {
+            return 0;
+        }
+        int n = matrix[0].size();
+        vector<vector<int>> left(m, vector<int>(n, 0));
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (matrix[i][j] == '1') {
+                    left[i][j] = (j == 0 ? 0: left[i][j - 1]) + 1;
+                }
+            }
+        }
+
+        int ret = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (matrix[i][j] == '0') {
+                    continue;
+                }
+                int width = left[i][j];
+                int area = width;
+                for (int k = i - 1; k >= 0; k--) {
+                    width = min(width, left[k][j]);
+                    area = max(area, (i - k + 1) * width);
+                }
+                ret = max(ret, area);
+            }
+        }
+        return ret;
+    }
+}
+
+
 int main() {
-    testLFU();
+//    string s = "1000[a]";
+//    cout << decodeString(s) << endl;
+//
+//    cout << max(2,3) << endl;
+//    vector<vector<char>> in = {{'1', '1', '1'}, {'1', '0', '1'}, {'1', '0', '1'}};
+//    cout << maxSquare::maxSquare(in) << endl;
+    test_maxDepth();
+    //reconstructQueue();
+//    Solution s;
+//    string a = "abbda";
+//    cout << "length=" << s.countSubstrings(a) << endl;
+//std::map<int, int> temp = {{1,2}, {3,4}};
+//    for (auto val:temp) {
+//        cout << val.second;
+//    }
+//        SolutionV2 ss;
+//    std::vector<int> nums = {5,4,6,2,9,0};
+//        ss.quickSort(nums, 0, nums.size()-1);
+//    for (int i = 0; i < nums.size(); ++i) {
+//        cout << "i=" << nums[i] << endl;
+//    }
+
+    //testLFU();
+//    std::vector<int> nums = {1,1, 3, 0, 0,0};
+//    auto res= getRightMaxV2(nums);
+//    for (int i = 0; i < res.size(); ++i) {
+//        cout << "ele=" << res[i] << endl;
+//    }
 //    std::unique_ptr<TestObj> pt(new TestObj(3,4));
 //    std::unique_ptr<TestObj> ps = std::move(pt);
 //    std::vector<int> nums = {1};

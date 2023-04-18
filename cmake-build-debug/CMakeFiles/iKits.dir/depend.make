@@ -5,6 +5,7 @@ CMakeFiles/iKits.dir/main.cpp.o: ../DListNode.h
 CMakeFiles/iKits.dir/main.cpp.o: ../LFUCache.cpp
 CMakeFiles/iKits.dir/main.cpp.o: ../LFUCache.h
 CMakeFiles/iKits.dir/main.cpp.o: ../LRUCache.h
+CMakeFiles/iKits.dir/main.cpp.o: ../algorithm.h
 CMakeFiles/iKits.dir/main.cpp.o: ../main.cpp
 CMakeFiles/iKits.dir/main.cpp.o: ../test_template.h
 CMakeFiles/iKits.dir/main.cpp.o: ../threadpool.h
