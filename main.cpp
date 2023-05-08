@@ -683,14 +683,193 @@ namespace maxSquare{
 }
 
 
+std::vector<int> nextGreaterElement(const std::vector<int>& nums) {
+    std::vector<int> result(nums.size(), -1); // 初始化结果数组为-1
+    std::stack<int> st; // 单调递减栈
+
+    for (int i = 0; i < nums.size(); ++i) {
+        while (!st.empty() && nums[i] > nums[st.top()]) {
+            // 当前元素大于栈顶元素，更新栈顶元素的下一个更大元素为当前元素
+            result[st.top()] = nums[i];
+            st.pop();
+        }
+        st.push(i); // 将当前元素下标入栈
+    }
+
+    return result;
+}
+
+//括号生成
+namespace parenthesis{
+    vector<string> res;
+    map<string, int> memo;
+    bool isValid(string &path) {
+        stack<char> selector;
+        for (char c : path) {
+            if (c == ')') {
+                if (selector.empty()) {
+                    return false;
+                }
+                selector.pop();
+            } else {
+                selector.push(c);
+            }
+        }
+        return selector.empty();
+    }
+
+    void backtrack(string &choice, string path) {
+        if (path.size() == choice.size()) {
+            if (isValid(path) && memo.find(path) == memo.end()) {
+                memo[path] = 1;
+                res.push_back(path);
+            }
+            return;
+        }
+        for (int i = 0; i < choice.size(); ++i) {
+            path.push_back(choice[i]);
+            backtrack(choice, path);
+            path.pop_back();
+        }
+    }
+
+    vector<string> generateParenthesis(int n) {
+        string choice(n, '(');
+        choice += string (n, ')');
+        string path;
+        backtrack(choice, path);
+        return res;
+    }
+}
+
+//解数独
+namespace solveSudoku{
+
+    bool isValid(vector<vector<char>>& board, int row, int col, char cur) {
+        //行
+        for (auto & c : board) {
+            if (c[col] == cur) {
+                return false;
+            }
+        }
+        //列
+        for (char c : board[row]) {
+            if (c == cur) {
+                return false;
+            }
+        }
+
+        //3*3
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 3; ++j) {
+                int curRow = (row / 3) * 3 + i;
+                int curCol = (col / 3) * 3 + j;
+                if (curRow == row && curCol == col) {
+                    continue;
+                }
+
+                if (board[curRow][curCol] == cur) {
+                    return false;
+                }
+
+            }
+        }
+        return true;
+    }
+
+    bool backtrack(vector<vector<char>>& board, int i, int j) {
+        int m = 9, n = 9;
+        if (j == n) {
+            // 穷举到最后一列的话就换到下一行重新开始。
+            return backtrack(board, i + 1, 0);
+        }
+        if (i == m) {
+            // 找到一个可行解，触发 base case
+            return true;
+        }
+
+        if (board[i][j] != '.') {
+            // 如果有预设数字，不用我们穷举
+            return backtrack(board, i, j + 1);
+        }
+
+        for (char ch = '1'; ch <= '9'; ch++) {
+            // 如果遇到不合法的数字，就跳过
+            if (!isValid(board, i, j, ch))
+                continue;
+
+            board[i][j] = ch;
+            // 如果找到一个可行解，立即结束
+            if (backtrack(board, i, j + 1)) {
+                return true;
+            }
+            board[i][j] = '.';
+        }
+        // 穷举完 1~9，依然没有找到可行解，此路不通
+        return false;
+    }
+
+    bool backteack(vector<vector<char>>& board, int row, int col) {
+        if (col == board.size()) {
+            return backteack(board, row + 1, 0);
+        }
+
+        if (row == board.size()) {
+            return true;
+        }
+
+        if (board[row][col] != '.') {
+            return backteack(board, row, col + 1);
+        }
+        for (int k = 1; k <= 9; ++k) {
+            if (!isValid(board, row, col, k + '0')) {
+                continue;
+            }
+            board[row][col] = k + '0';
+            if (backteack(board, row, col + 1)) {
+                return true;
+            }
+            board[row][col] = '.';
+        }
+
+        return false;
+    }
+
+    void solveSudoku(vector<vector<char>>& board) {
+        backteack(board, 0, 0);
+    }
+
+}
+
+std::string printVec(vector<vector<char>>& res) {
+    std::stringstream ss;
+    for (int i = 0; i < res.size(); ++i) {
+        ss << "[";
+        for (int j = 0; j < res[i].size(); ++j) {
+            ss << res[i][j];
+            if (j != res[i].size()) {
+                ss << ",";
+            }
+        }
+        ss << "]";
+    }
+    return ss.str();
+}
+
+
 int main() {
+    vector<vector<char>> board = {{'5','3','.','.','7','.','.','.','.'},{'6','.','.','1','9','5','.','.','.'},{'.','9','8','.','.','.','.','6','.'},{'8','.','.','.','6','.','.','.','3'},{'4','.','.','8','.','3','.','.','1'},{'7','.','.','.','2','.','.','.','6'},{'.','6','.','.','.','.','2','8','.'},{'.','.','.','4','1','9','.','.','5'},{'.','.','.','.','8','.','.','7','9'}};
+    solveSudoku::solveSudoku(board);
+    cout << printVec(board).c_str() << endl;
+
+
 //    string s = "1000[a]";
 //    cout << decodeString(s) << endl;
 //
 //    cout << max(2,3) << endl;
 //    vector<vector<char>> in = {{'1', '1', '1'}, {'1', '0', '1'}, {'1', '0', '1'}};
 //    cout << maxSquare::maxSquare(in) << endl;
-    test_maxDepth();
+//    test_maxDepth();
     //reconstructQueue();
 //    Solution s;
 //    string a = "abbda";

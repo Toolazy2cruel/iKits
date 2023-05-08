@@ -305,6 +305,105 @@ private:
 };
 
 
+//责任链模式
+class Request {
+public:
+    Request(const std::string& type) : m_type(type) {}
+
+    std::string getType() const {
+        return m_type;
+    }
+
+private:
+    std::string m_type;
+};
+
+class Handler {
+public:
+    Handler(const std::string& name) : m_name(name), m_successor(nullptr) {}
+
+    void setSuccessor(Handler* successor) {
+        m_successor = successor;
+    }
+
+    virtual void handleRequest(const Request& request) {
+        if (m_successor) {
+            m_successor->handleRequest(request);
+        }
+    }
+
+protected:
+    std::string m_name;
+    Handler* m_successor;
+};
+
+class ConcreteHandlerA : public Handler {
+public:
+    ConcreteHandlerA() : Handler("ConcreteHandlerA") {}
+
+    void handleRequest(const Request& request) override {
+        if (request.getType() == "TypeA") {
+            std::cout << m_name << " handled the request." << std::endl;
+        } else {
+            Handler::handleRequest(request);
+        }
+    }
+};
+
+class ConcreteHandlerB : public Handler {
+public:
+    ConcreteHandlerB() : Handler("ConcreteHandlerB") {}
+
+    void handleRequest(const Request& request) override {
+        if (request.getType() == "TypeB") {
+            std::cout << m_name << " handled the request." << std::endl;
+        } else {
+            Handler::handleRequest(request);
+        }
+    }
+};
+
+class ConcreteHandlerC : public Handler {
+public:
+    ConcreteHandlerC() : Handler("ConcreteHandlerC") {}
+
+    void handleRequest(const Request& request) override {
+        if (request.getType() == "TypeC") {
+            std::cout << m_name << " handled the request." << std::endl;
+        } else {
+            Handler::handleRequest(request);
+        }
+    }
+};
+
+int test_chain_of_response() {
+    // 创建责任链
+    Handler* handlerA = new ConcreteHandlerA();
+    Handler* handlerB = new ConcreteHandlerB();
+    Handler* handlerC = new ConcreteHandlerC();
+
+    handlerA->setSuccessor(handlerB);
+    handlerB->setSuccessor(handlerC);
+
+    // 发送请求
+    Request requestA("TypeA");
+    Request requestB("TypeB");
+    Request requestC("TypeC");
+    Request requestD("TypeD");
+
+    handlerA->handleRequest(requestA);
+    handlerA->handleRequest(requestB);
+    handlerA->handleRequest(requestC);
+    handlerA->handleRequest(requestD);
+
+    // 释放资源
+    delete handlerA;
+    delete handlerB;
+    delete handlerC;
+
+    return 0;
+}
+
 
 #endif //IKITS_DESIGN_PATTERN_H
 
