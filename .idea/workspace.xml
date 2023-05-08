@@ -12,17 +12,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d1e282ad-4e38-4ba7-b6a1-e8af52ba8016" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/AVL.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RedBlackTree.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/block_queue.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/semaphore.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shared_lock.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/thread_pool.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/iKits.dir/main.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/iKits.dir/main.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/iKits" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/iKits" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/design_pattern.h" beforeDir="false" afterPath="$PROJECT_DIR$/design_pattern.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,6 +116,7 @@
       <workItem from="1683258517674" duration="6511000" />
       <workItem from="1683515681850" duration="1141000" />
       <workItem from="1683528969924" duration="413000" />
+      <workItem from="1683537937156" duration="251000" />
     </task>
     <task id="LOCAL-00001" summary="init">
       <created>1680491978399</created>
@@ -141,21 +132,51 @@
       <option name="project" value="LOCAL" />
       <updated>1681811364512</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="init">
+      <created>1683538033035</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1683538033035</updated>
+    </task>
+    <task id="LOCAL-00004" summary="init">
+      <created>1683538047518</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1683538047518</updated>
+    </task>
+    <task id="LOCAL-00005" summary="init">
+      <created>1683538067853</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1683538067853</updated>
+    </task>
+    <task id="LOCAL-00006" summary="init">
+      <created>1683538119795</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1683538119795</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_NEW_TODO" value="false" />
     <MESSAGE value="init" />
     <option name="LAST_COMMIT_MESSAGE" value="init" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="-1920" y="-247" key="CommitChangelistDialog2" timestamp="1683538067727">
+    <state x="-1920" y="-247" key="CommitChangelistDialog2" timestamp="1683538119672">
       <screen x="-1920" y="-270" width="1920" height="1080" />
     </state>
-    <state x="-1920" y="-247" key="CommitChangelistDialog2/0.0.1440.900/-1920.-270.1920.1080@-1920.-270.1920.1080" timestamp="1683538067727" />
+    <state x="-1920" y="-247" key="CommitChangelistDialog2/0.0.1440.900/-1920.-270.1920.1080@-1920.-270.1920.1080" timestamp="1683538119672" />
     <state x="0" y="26" key="CommitChangelistDialog2/0.23.1440.797/-1920.-247.1920.1057@0.23.1440.797" timestamp="1680491978079" />
     <state width="1878" height="267" key="GridCell.Tab.0.bottom" timestamp="1683276337690">
       <screen x="-1920" y="-270" width="1920" height="1080" />
@@ -237,10 +258,10 @@
       <screen x="0" y="23" width="1440" height="797" />
     </state>
     <state x="222" y="60" key="SettingsEditor/0.23.1440.797/-1920.-247.1920.1057@0.23.1440.797" timestamp="1680492247047" />
-    <state x="-1385" y="32" key="Vcs.Push.Dialog.v2" timestamp="1683538069405">
+    <state x="-1385" y="32" key="Vcs.Push.Dialog.v2" timestamp="1683538121922">
       <screen x="-1920" y="-270" width="1920" height="1080" />
     </state>
-    <state x="-1385" y="32" key="Vcs.Push.Dialog.v2/0.0.1440.900/-1920.-270.1920.1080@-1920.-270.1920.1080" timestamp="1683538069405" />
+    <state x="-1385" y="32" key="Vcs.Push.Dialog.v2/0.0.1440.900/-1920.-270.1920.1080@-1920.-270.1920.1080" timestamp="1683538121922" />
     <state x="401" y="246" key="Vcs.Push.Dialog.v2/0.23.1440.797/-1920.-247.1920.1057@0.23.1440.797" timestamp="1680491992706" />
     <state x="397" y="273" key="com.intellij.ide.util.TipDialog" timestamp="1683258517964">
       <screen x="0" y="23" width="1440" height="797" />
