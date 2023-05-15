@@ -43,6 +43,8 @@ void nextpermutation(std::vector<int>& nums) {
 
 }
 
+
+
 namespace Combine{
     vector<vector<int>> res;
 
@@ -857,11 +859,42 @@ std::string printVec(vector<vector<char>>& res) {
 }
 
 
-int main() {
-    vector<vector<char>> board = {{'5','3','.','.','7','.','.','.','.'},{'6','.','.','1','9','5','.','.','.'},{'.','9','8','.','.','.','.','6','.'},{'8','.','.','.','6','.','.','.','3'},{'4','.','.','8','.','3','.','.','1'},{'7','.','.','.','2','.','.','.','6'},{'.','6','.','.','.','.','2','8','.'},{'.','.','.','4','1','9','.','.','5'},{'.','.','.','.','8','.','.','7','9'}};
-    solveSudoku::solveSudoku(board);
-    cout << printVec(board).c_str() << endl;
+struct MatchPairWithSore {
+    enum STAGE {
+        COMMON = 5,
+        MATCHTOGO = 10,
+    };
+    MatchPairWithSore(int driver_index, int trip_index, float score)
+        :driver_index_(driver_index), trip_index_(trip_index), score_(score), stage_(STAGE::COMMON) {
+    }
 
+    int driver_index_;
+    int trip_index_;
+    float score_;
+    STAGE stage_;
+
+    void reset(STAGE stage) {
+        stage_ = stage;
+    }
+};
+
+int main() {
+//    vector<vector<char>> board = {{'5','3','.','.','7','.','.','.','.'},{'6','.','.','1','9','5','.','.','.'},{'.','9','8','.','.','.','.','6','.'},{'8','.','.','.','6','.','.','.','3'},{'4','.','.','8','.','3','.','.','1'},{'7','.','.','.','2','.','.','.','6'},{'.','6','.','.','.','.','2','8','.'},{'.','.','.','4','1','9','.','.','5'},{'.','.','.','.','8','.','.','7','9'}};
+//    solveSudoku::solveSudoku(board);
+//    cout << printVec(board).c_str() << endl;
+//    vector<MatchPairWithSore> b_vec_;
+//    b_vec_.emplace_back(1,2,0.3);
+//    b_vec_.emplace_back(1,3,0.1);
+//    b_vec_.emplace_back(1,4,0.4);
+//    b_vec_.emplace_back(1,5,0.3);
+//
+//    b_vec_.back().reset(MatchPairWithSore::STAGE::MATCHTOGO);
+//    auto cmp = [&](MatchPairWithSore f, MatchPairWithSore s) { return f.score_ == s.score_ ? f.stage_ > s.stage_ : f.score_ > s.score_; };
+//    std::sort(b_vec_.begin(), b_vec_.end(), cmp);
+//
+//    for (int i = 0; i < b_vec_.size(); ++i) {
+//        cout << b_vec_[i].driver_index_ << "," << b_vec_[i].trip_index_ << "," << b_vec_[i].score_ << "," << b_vec_[i].stage_ << endl;
+//    }
 
 //    string s = "1000[a]";
 //    cout << decodeString(s) << endl;
@@ -901,9 +934,8 @@ int main() {
 //    AP* p = new BP();
 //    p->func();
 
-    //TestTemplate<int> a;
-    //a.f();
-    //TestTemplateV2();
+    TemplateClass<int> a;
+    a.someFunction();
 //    B b(2);
 //    cout << "b=" << b.c << endl;
 //    testC11();

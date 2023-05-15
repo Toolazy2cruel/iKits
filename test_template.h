@@ -5,12 +5,12 @@
 #ifndef IKITS_TEST_TEMPLATE_H
 #define IKITS_TEST_TEMPLATE_H
 
-template<class T>
-class TestTemplate {
+template <typename T>
+class TemplateClass {
 public:
-    void f();
-};
+    TemplateClass();
 
-void TestTemplateV2();
+    void someFunction();
+};
 
 #endif //IKITS_TEST_TEMPLATE_H

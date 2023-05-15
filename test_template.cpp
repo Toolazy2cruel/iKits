@@ -5,14 +5,17 @@
 #include "test_template.h"
 #include <iostream>
 
-template<class T>
-void TestTemplate<T>::f()
-{
-    std::cout << "template defined v1!" << std::endl;
-
+// 模板的定义
+template <typename T>
+TemplateClass<T>::TemplateClass() {
+    // 构造函数的实现...
+    std::cout << "TemplateClass init" << std::endl;
 }
 
-void TestTemplateV2() {
-    std::cout << "template defined v2!" << std::endl;
+template <typename T>
+void TemplateClass<T>::someFunction() {
+    // 函数的实现...
+    std::cout << "func init" << std::endl;
 }
-template class TestTemplate<int>;
+
+template class TemplateClass<int>;
