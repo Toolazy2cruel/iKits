@@ -3,6 +3,7 @@
 #include <sstream>
 #include <string>
 #include <map>
+#include <queue>
 #include <algorithm>
 #include <memory>
 #include "test_template.h"
@@ -10,6 +11,9 @@
 #include "LRUCache.h"
 #include "LFUCache.h"
 #include "LFUCache.cpp"
+#include "TrieTree.h"
+#include "DisjointSet.h"
+#include <set>
 #include <stack>
 #include "threadpool.h"
 #include "algorithm.h"
@@ -42,6 +46,9 @@ void nextpermutation(std::vector<int>& nums) {
     //从右往左找1个
 
 }
+
+
+
 
 
 
@@ -878,23 +885,387 @@ struct MatchPairWithSore {
     }
 };
 
+struct AAAA{
+    AAAA(int pid):product_id(pid){}
+    int product_id;
+    struct B{
+        int id;
+        int LL;
+    };
+};
+
+std::vector<AAAA> A_vec;
+
+AAAA& GetAAAA(int pid){
+    for(auto &a:A_vec) {
+        if (a.product_id == pid){
+            return a;
+        }
+    }
+    A_vec.emplace_back(pid);
+    return A_vec.back();
+}
+
+class leetcode{
+public:
+    bool ans = false;
+    bool findTargetWord() {
+        vector<vector<char >> res = {{'A','B', 'C', 'E'},{'S', 'F', 'C', 'S'}, {'A', 'D', 'E', 'E'}};
+        string s = "ASFCS";
+        for (int i = 0; i < res.size(); ++i) {
+            for (int j = 0; j < res[i].size(); ++j) {
+                if (ans) {
+                    return ans;
+                }
+                dfs(res, i, j, 0, s);
+            }
+        }
+
+        return ans;
+    }
+
+    void dfs(vector<vector<char>>& res, int i, int j, int cur, string s) {
+        if (i >= res.size() || i < 0 || j >= res[i].size() || j < 0 || cur >= s.size() ) {
+            return;
+        }
+
+        if (res[i][j] == s[cur]) {
+            if (cur == s.size()-1) {
+                if (!ans) {
+                    ans = true;
+                    return;
+                }
+            }
+
+            cur++;
+            char tmp = res[i][j];
+            res[i][j] = '%';
+            dfs(res, i-1, j, cur, s);
+            dfs(res, i+1, j, cur, s);
+            dfs(res, i, j+1, cur, s);
+            dfs(res, i, j-1, cur, s);
+            res[i][j] = tmp;
+            cur--;
+        }
+
+    }
+};
+
+namespace GeleiCode{
+    vector<vector<int>> ans;
+    void backtrace(vector<int>& path, int n) {
+        if (path.size() == n) {
+            ans.push_back(path);
+            return;
+        }
+
+        path.push_back(0);
+        backtrace(path, n);
+        path.pop_back();
+
+        path.push_back(1);
+        backtrace(path, n);
+        path.pop_back();
+
+    }
+
+    void genreate(int n) {
+        vector<int> path;
+        backtrace(path, n);
+        return;;
+    }
+
+}
+
+namespace ipaddress{
+    vector<vector<string>> ans;
+    bool isValid(string s) {
+        if (s.empty()) {
+            return false;
+        }
+        if (s[0] == '0') {
+            return s.size() == 1;
+        }
+
+        for (char i : s) {
+            if (i < '0' || i > '9') {
+                return false;
+            }
+        }
+        int num = 0, multi=1;
+        for (int j = s.size()-1; j >= 0; j--) {
+            num += (s[j] - '0')*multi;
+            multi *= 10;
+        }
+        if (num > 255) {
+            return false;
+        }
+        return true;
+    }
+
+    void backtrace(vector<string>& path, vector<int>& memo, int size, string&ip, int index) {
+        if (path.size() == 4 && index == ip.size()) {
+            ans.push_back(path);
+            return;
+        }
+
+        for (int i = size; i <= 3; ++i) {
+            if (index + i > ip.size()) {
+                continue;
+            }
+
+            string s = ip.substr(index, i);
+            if (!isValid(s)) {
+                continue;
+            }
+            bool flag = false;
+            for (int k = 0; k < s.size(); ++k) {
+                if (memo[index+k] == 1) {
+                    flag = true;
+                    break;
+                }
+            }
+            if (flag) {
+                continue;
+            }
+
+            for (int j = 0; j < s.size(); ++j) {
+                memo[index+j] = 1;
+            }
+            path.push_back(s);
+            backtrace(path, memo, size, ip, index + i);
+
+            path.pop_back();
+            for (int j = 0; j < s.size(); ++j) {
+                memo[index+j] = 0;
+            }
+
+        }
+
+    }
+    void genreate(string ip) {
+        vector<string> path;
+        vector<int> memo(ip.size(), 0);
+        backtrace(path, memo, 1, ip, 0);
+        return;;
+    }
+
+
+}
+
+int dumplicateNums(vector<int>&nums, int val){
+    int slow = 0, fast = 0;
+    while (fast < nums.size()) {
+        if (nums[fast] != val) {
+            nums[slow] = nums[fast];
+            slow++;
+        }
+
+        fast++;
+    }
+    return slow;
+}
+
+//移动0
+void moveZero(vector<int>&nums) {
+    int slow = 0, fast = 0;
+    while (fast < nums.size()) {
+        if (nums[fast] != 0) {
+            nums[slow] = nums[fast];
+            slow++;
+        }
+
+        fast++;
+    }
+
+    for (int i = slow; i < nums.size(); ++i) {
+        nums[i] = 0;
+    }
+}
+
+void nextLargeElem(vector<int>& nums) {
+    vector<int> result(nums.size(), -1);
+    stack<int> sta;
+    for (int i = 0; i < nums.size(); ++i) {
+        while (!sta.empty() && nums[i] > nums[sta.top()]) {
+            result[sta.top()] = nums[i];
+            sta.pop();
+        }
+        sta.push(i);
+    }
+    for (int k : result) {
+        cout << "next large=" << k << endl;
+    }
+
+    return;
+}
+
+
+void threeSum(vector<int>& nums, int target) {
+    vector<vector<int>> ans;
+    sort(nums.begin(), nums.end());
+    for (int i = 0; i < nums.size(); ++i) {
+        if (i >= 1 && nums[i-1] == nums[i]) {
+            continue;
+        }
+        int left = i + 1;
+        int right = nums.size()-1;
+        while(left<right) {
+            int sum = nums[i] + nums[left] + nums[right];
+            if (sum < target) {
+                left++;
+                while (left<nums.size() && nums[left] == nums[left-1]) {
+                    left++;
+                }
+            } else if (sum > target) {
+                right--;
+                while (right>=0 && nums[right] == nums[right+1]) {
+                    right--;
+                }
+            } else {
+                cout << "a=" << nums[i] << "b=" << nums[left] << "c=" << nums[right] << endl;
+                left++;right--;
+                ans.push_back(vector<int>{i, left, right});
+            }
+        }
+
+    }
+}
+
+int threeSumV2(vector<int>& nums, int target) {
+    sort(nums.begin(), nums.end());
+    int close_diff = INT_MAX;
+    int close_val = INT_MAX;
+    for (int i = 0; i < nums.size(); ++i) {
+        if (i >= 1 && nums[i-1] == nums[i]) {
+            continue;
+        }
+        int left = i + 1;
+        int right = nums.size()-1;
+
+        while(left<right) {
+            int sum = nums[i] + nums[left] + nums[right];
+            if (abs(sum-target) < close_diff) {
+                close_diff = abs(sum-target);
+                close_val = sum;
+            }
+            if (sum < target) {
+                left++;
+                while (left<nums.size() && nums[left] == nums[left-1]) {
+                    left++;
+                }
+            } else if (sum > target) {
+                right--;
+                while (right>=0 && nums[right] == nums[right+1]) {
+                    right--;
+                }
+            } else {
+                left++;right--;
+            }
+        }
+
+    }
+    return close_val;
+}
+
+namespace generateBracket{
+    vector<string> ans;
+    void backtrace(string& path, int n, int p, int q) {
+        if(path.size()==2*n) {
+            cout << "path=" << path << endl;
+            ans.push_back(path);
+            return;
+        }
+        if (p < n) {
+            path.push_back('(');
+            backtrace(path, n, p + 1, q);
+            path.pop_back();
+        }
+        if (q < n && p > q) {
+            path.push_back(')');
+            backtrace(path, n, p, q+1);
+            path.pop_back();
+        }
+    }
+
+    vector<string> generateBracket(int n) {
+        string path;
+        backtrace(path, 3, 0, 0);
+        return ans;
+    }
+}
+
+
+
+
 int main() {
+    generateBracket::generateBracket(3);
+    vector<int> geeed = {-1,2,1,4};
+    cout << "close_val=" << threeSumV2(geeed, 7) << endl;
+    nextLargeElem(geeed);
+    moveZero(geeed);
+    for (int k = 0; k < geeed.size(); ++k) {
+        cout << "el=" << geeed[k] << endl;
+    }
+
+    string tddd = "asvavv";
+    cout << tddd.substr(2, 3) << endl;
+
+    ipaddress::genreate("101023");
+    for (int j = 0; j < ipaddress::ans.size(); ++j) {
+        stringstream ss;
+        for (int i = 0; i < ipaddress::ans[j].size(); ++i) {
+            if (i == ipaddress::ans[j].size() - 1) {
+                ss << ipaddress::ans[j][i];
+                continue;
+            }
+            ss << ipaddress::ans[j][i] << ",";
+        }
+        cout << "code=" << ss.str().c_str() << endl;
+    }
+
+    GeleiCode::genreate(5);
+    cout << "code=" << printVec(GeleiCode::ans) << endl;
+
+
+    leetcode lcode;
+    cout << "res=" << lcode.findTargetWord() << endl;
+
+
+    if (true and 0) {
+       cout << "yesss" << endl;
+    }
+
+    A_vec.emplace_back(1);
+    A_vec.emplace_back(2);
+    A_vec.emplace_back(3);
+    cout << "GetAAA(1)=" << GetAAAA(1).product_id << endl;
+    cout << "GetAAA(2)=" << GetAAAA(2).product_id << endl;
+    cout << "GetAAA(5)=" << GetAAAA(5).product_id << endl;
+    cout << "A_vec.size=" << A_vec.size() << endl;
+
 //    vector<vector<char>> board = {{'5','3','.','.','7','.','.','.','.'},{'6','.','.','1','9','5','.','.','.'},{'.','9','8','.','.','.','.','6','.'},{'8','.','.','.','6','.','.','.','3'},{'4','.','.','8','.','3','.','.','1'},{'7','.','.','.','2','.','.','.','6'},{'.','6','.','.','.','.','2','8','.'},{'.','.','.','4','1','9','.','.','5'},{'.','.','.','.','8','.','.','7','9'}};
 //    solveSudoku::solveSudoku(board);
 //    cout << printVec(board).c_str() << endl;
-//    vector<MatchPairWithSore> b_vec_;
-//    b_vec_.emplace_back(1,2,0.3);
-//    b_vec_.emplace_back(1,3,0.1);
-//    b_vec_.emplace_back(1,4,0.4);
-//    b_vec_.emplace_back(1,5,0.3);
-//
-//    b_vec_.back().reset(MatchPairWithSore::STAGE::MATCHTOGO);
-//    auto cmp = [&](MatchPairWithSore f, MatchPairWithSore s) { return f.score_ == s.score_ ? f.stage_ > s.stage_ : f.score_ > s.score_; };
-//    std::sort(b_vec_.begin(), b_vec_.end(), cmp);
-//
-//    for (int i = 0; i < b_vec_.size(); ++i) {
-//        cout << b_vec_[i].driver_index_ << "," << b_vec_[i].trip_index_ << "," << b_vec_[i].score_ << "," << b_vec_[i].stage_ << endl;
-//    }
+    vector<MatchPairWithSore> b_vec_;
+    b_vec_.emplace_back(1,2,0.3);
+    b_vec_.emplace_back(1,3,0.1);
+    b_vec_.emplace_back(1,4,0.4);
+    b_vec_.emplace_back(1,5,0.3);
+
+    b_vec_.back().reset(MatchPairWithSore::STAGE::MATCHTOGO);
+    auto cmp = [&](MatchPairWithSore f, MatchPairWithSore s) { return f.score_ < s.score_; };
+    std::sort(b_vec_.begin(), b_vec_.end(), cmp);
+
+    for (int i = 0; i < b_vec_.size(); ++i) {
+        cout << b_vec_[i].driver_index_ << "," << b_vec_[i].trip_index_ << "," << b_vec_[i].score_ << "," << b_vec_[i].stage_ << endl;
+    }
+    std::priority_queue<int, std::vector<int>, std::greater<int>> minHeap;
+    minHeap.push(3);
+    minHeap.push(1);
+    minHeap.push(2);
+    minHeap.push(4);
+    cout << "top=" << minHeap.top() << endl;
 
 //    string s = "1000[a]";
 //    cout << decodeString(s) << endl;
@@ -934,8 +1305,8 @@ int main() {
 //    AP* p = new BP();
 //    p->func();
 
-    TemplateClass<int> a;
-    a.someFunction();
+//    TemplateClass<int> a;
+//    a.someFunction();
 //    B b(2);
 //    cout << "b=" << b.c << endl;
 //    testC11();

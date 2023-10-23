@@ -48,7 +48,6 @@ struct DoubleList {
         }
         int key = head->next->key;
         Remove(head->next);
-        size_--;
         return key;
     }
 
