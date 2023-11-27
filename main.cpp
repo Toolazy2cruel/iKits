@@ -14,7 +14,9 @@
 #include "TrieTree.h"
 #include "DisjointSet.h"
 #include <set>
+#include "FenwickTree.h"
 #include <stack>
+#include <deque>
 #include "threadpool.h"
 #include "algorithm.h"
 
@@ -1195,12 +1197,193 @@ namespace generateBracket{
     }
 }
 
+//寻找最左边的target
+int twoFenSearch(vector<int>& nums, int target) {
+    int left = 0;
+    int right = nums.size() - 1;
+    while(left<right) {
+        int mid = left + (right - left) / 2;
+        if (target > nums[mid]) {
+            left = mid + 1;
+        } else if (target < nums[mid]) {
+            right = mid -1;
+        } else {
+            right = mid;
+        }
 
+    }
+    return left;
+}
 
+//寻找最右边的target
+int twoFenSearchV2(vector<int>& nums, int target) {
+    int left = 0;
+    int right = nums.size() - 1;
+    while(left<right) {
+        int mid = left + (right - left) / 2;
+        if (target > nums[mid]) {
+            left = mid + 1;
+        } else if (target < nums[mid]) {
+            right = mid -1;
+        } else {
+            left = mid;
+        }
+    }
+    return left;
+}
+
+//寻找插入值
+int twoFenSearchV3(vector<int>& nums, int target) {
+    int left = 0;
+    int right = nums.size() - 1;
+    while(left<right) {
+        int mid = left + (right - left) / 2;
+        if (target > nums[mid]) {
+            left = mid + 1;
+        } else if (target < nums[mid]) {
+            right = mid - 1;
+        } else {
+            return mid;
+        }
+    }
+    return target > nums[left]?left:left-1;
+}
+
+vector<vector<int>> insertRegion(vector<vector<int>>& nums, vector<int>& region) {
+    if (nums.empty()) {
+        return vector<vector<int>>{region};
+    }
+    int left = region[0];
+    int right= region[1];
+    vector<vector<int>> ans;
+    for (int i = 0; i < nums.size(); ++i) {
+        continue;
+
+    }
+    return ans;
+}
+
+int maxSerialListLength(vector<int>& nums) {
+    vector<int> dp(nums.size(), 0);
+    dp[0] = nums[0];
+    for (int i = 1; i < nums.size(); ++i) {
+        dp[i] = max(dp[i-1]+nums[i], nums[i]);
+    }
+    int res = -1;
+    for (int j = 0; j < dp.size(); ++j) {
+        res = max(res, dp[j]);
+    }
+    return res;
+}
+
+int parseCode(string s) {
+    vector<int> dp(s.size(), 0);
+    if (s[0]!='0') {
+        dp[0]=1;
+    } else {
+        return 0;
+    }
+    for (int i = 1; i < s.size(); ++i) {
+        int num = atoi(s.substr(i-1,2).c_str());
+        if (num>=0 && num<=26) {
+            dp[i] = dp[i-1]+1;
+        } else {
+            dp[i] = dp[i-1];
+        }
+    }
+    return dp[s.size()-1];
+}
+
+//单调栈
+std::vector<int> findNextGreater(const std::vector<int>& nums) {
+    std::vector<int> result(nums.size(), -1); // 初始化结果数组，初始值为-1表示右边没有更大的元素
+    std::stack<int> monoStack; // 单调递增栈，栈中存放元素的下标
+
+    for (int i = 0; i < nums.size(); ++i) {
+        // 如果当前元素比栈顶元素大，说明找到了右边第一个比栈顶元素大的元素
+        while (!monoStack.empty() && nums[i] > nums[monoStack.top()]) {
+            result[monoStack.top()] = i;
+            monoStack.pop();
+        }
+
+        // 将当前元素下标入栈
+        monoStack.push(i);
+    }
+
+    return result;
+}
+
+//单调队列
+std::vector<int> maxSlidingWindow(const std::vector<int>& nums, int k) {
+    std::vector<int> result;
+    std::deque<int> monoQueue;
+
+    for (int i = 0; i < nums.size(); ++i) {
+        // 维护单调递减队列
+        while (!monoQueue.empty() && nums[i] > nums[monoQueue.back()]) {
+            monoQueue.pop_back();
+        }
+
+        // 将当前元素加入队列
+        monoQueue.push_back(i);
+
+        // 判断队头元素是否在当前窗口内
+        if (monoQueue.front() == i - k) {
+            //当前队头不应该在窗口内
+            monoQueue.pop_front();
+        }
+
+        // 记录当前窗口的最大值
+        if (i >= k - 1) {
+            //只有第一个窗口的前两个值不够三个
+            result.push_back(nums[monoQueue.front()]);
+        }
+    }
+
+    return result;
+}
+
+void testFTree() {
+    // 创建一个大小为 10 的树状数组
+    FenwickTree fenwickTree(10);
+
+    // 更新元素
+    fenwickTree.update(2, 1);
+    fenwickTree.update(5, 2);
+    fenwickTree.update(7, 3);
+
+    // 查询前缀和
+    std::cout << "Prefix sum of first 5 elements: " << fenwickTree.query(5) << std::endl;
+
+    // 更新元素
+    fenwickTree.update(5, 1);
+
+    // 再次查询前缀和
+    std::cout << "Prefix sum of first 5 elements after update: " << fenwickTree.query(5) << std::endl;
+}
 
 int main() {
+    testFTree();
+
+
+    std::vector<int> nums = {1, 3, -1, -3, 5, 3, 6, 7};
+    int k = 3;
+
+    std::vector<int> result = findNextGreater(nums);
+
+    // 输出结果
+    std::cout << "Result: ";
+    for (int num : result) {
+        std::cout <<"max_window_num=" <<  num << " ";
+    }
+
+    string code = "27";
+    cout << "number=" << parseCode(code) << endl;
+    vector<int> geeed = {0,1,-2,2,-3,4,-10};
+    cout << "sum=" << maxSerialListLength(geeed) << endl;
+    cout << "pos=" << twoFenSearchV3(geeed, -1) << endl;
     generateBracket::generateBracket(3);
-    vector<int> geeed = {-1,2,1,4};
+
     cout << "close_val=" << threeSumV2(geeed, 7) << endl;
     nextLargeElem(geeed);
     moveZero(geeed);
